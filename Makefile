@@ -1,7 +1,7 @@
 GITUSER := Doug
 EMAIL := doug@phoenox.net
-SSHKEY := ~/.ssh/id_github
-SSHFLAGS := -oStrictHostKeyChecking=no -oIdentitiesOnly=yes 
+KEY := ~/.ssh/id_github
+FLAGS := -oStrictHostKeyChecking=no -oIdentitiesOnly=yes 
 BINARIES := direnv bat htop httpie silversearcher-ag\
        	    vim\
 	    vcsh myrepos\
@@ -15,7 +15,11 @@ config:
 	git config --global user.email $(EMAIL)
 	git config --global user.name $(GITUSER)
 	git config --global init.defaultBranch main
-	git config --local core.hooksPath .githooks/
-	GIT_SSH_COMMAND="ssh $(SSHFLAGS) -i $(SSHKEY)" vcsh clone -b main git@github.com:chad-betamax/bash.git bash
+
+	#git config --global core.hooksPath .githooks/
+	mkdir ~/.config/vcsh/repo.d/hooks-enabled
+	mv pre-merge-unclobber ~/.config/vcsh/repo.d/hooks-enabled/
+
+	GIT_SSH_COMMAND="ssh $(FLAGS) -i $(KEY)" vcsh clone -b main git@github.com:chad-betamax/bash.git bash
 
 box: install config 
