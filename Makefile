@@ -10,6 +10,7 @@ BINARIES := direnv bat htop httpie silversearcher-ag\
 install:
 	sudo apt-get update
 	sudo apt-get install -y $(BINARIES) 
+	vcsh list
 	mkdir ~/.config/vcsh/repo.d/hooks-enabled
 
 config:
