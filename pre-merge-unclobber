@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+BACKUP_DIR="$HOME/clobbered-by-vcsh/${VCSH_REPO_NAME}-$(date "+%F-%R")"
+
+# move files out of the way
+for object in $(git ls-tree --name-only origin/main); do
+  if test -e $object; then
+    # create the clobber directory
+    [ ! -d "$BACKUP_DIR" ] && mkdir -p "$BACKUP_DIR"
+    echo "mv $HOME/$object to $BACKUP_DIR/$object"
+    mv "$HOME/$object" "$BACKUP_DIR/$object"
+  fi
+done
+
+unset BACKUP_DIR
