@@ -17,7 +17,7 @@ config:
 	git config --global user.email $(EMAIL)
 	git config --global user.name $(GITUSER)
 	git config --global init.defaultBranch main
-	cp pre-merge-unclobber ~/.config/vcsh/repo.d/hooks-enabled/
+	cp pre-merge-unclobber ~/.config/vcsh/hooks-enabled/
 	GIT_SSH_COMMAND="ssh $(FLAGS) -i $(KEY)" vcsh clone -b main git@github.com:chad-betamax/bash.git bash
 
 box: install config 
