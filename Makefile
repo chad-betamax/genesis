@@ -11,7 +11,7 @@ install:
 	sudo apt-get update
 	sudo apt-get install -y $(BINARIES) 
 	vcsh list
-	mkdir ~/.config/vcsh/repo.d/hooks-enabled
+	mkdir ~/.config/vcsh/hooks-enabled
 
 config:
 	git config --global user.email $(EMAIL)
