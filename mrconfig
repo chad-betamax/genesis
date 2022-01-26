@@ -1,5 +1,5 @@
-[.config/vcsh/repo.d/bash.git]
+[$HOME/.config/vcsh/repo.d/bash.git]
 checkout = vcsh clone -b main git@github.com:chad-betamax/bash.git bash
 
-[.config/vcsh/repo.d/mate.git]
+[$HOME/.config/vcsh/repo.d/mate.git]
 checkout = vcsh clone -b main git@github.com:chad-betamax/mate.git mate
