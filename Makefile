@@ -1,8 +1,5 @@
-GITUSER := Doug
-EMAIL := doug@phoenox.net
-KEY := ~/.ssh/id_github
-FLAGS := -oStrictHostKeyChecking=no -oIdentitiesOnly=yes 
-GIT_SSH := GIT_SSH_COMMAND="ssh $(FLAGS) -i $(KEY)"
+COMMITNAME := Doug
+COMMITEMAIL := doug@phoenox.net
 HOOKDIR := ~/.config/vcsh/hooks-enabled
 BINARIES := direnv bat htop httpie silversearcher-ag\
        	    vim\
@@ -12,17 +9,18 @@ BINARIES := direnv bat htop httpie silversearcher-ag\
 install:
 	sudo apt-get update
 	sudo apt-get install -y $(BINARIES) 
-	vcsh list
-	if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 
 config:
-	git config --global user.email $(EMAIL)
-	git config --global user.name $(GITUSER)
-	git config --global init.defaultBranch main
+	vcsh list
+	if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 	cp pre-merge-unclobber $(HOOKDIR)/
+	mv ./mrconfig ~/.mrconfig
+	git config --global user.email $(COMMITEMAIL)
+	git config --global user.name $(COMMITNAME)
+	git config --global init.defaultBranch main
 
 repos:
-	mr --trust-all checkout
+	mr checkout
 
 mate:
 	dconf load / <~/mate-settings
