@@ -11,19 +11,18 @@ install:
 	sudo apt-get install -y $(BINARIES) 
 
 config:
-	vcsh list
-	if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
-	cp pre-merge-unclobber $(HOOKDIR)/
-	mv ./mrconfig ~/.mrconfig
-	git config --global user.email $(COMMITEMAIL)
-	git config --global user.name $(COMMITNAME)
-	git config --global init.defaultBranch main
+	@vcsh list
+	@if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
+	@cp pre-merge-unclobber $(HOOKDIR)/
+	@cp ./mrconfig ~/.mrconfig
+	@git config --global user.email $(COMMITEMAIL)
+	@git config --global user.name $(COMMITNAME)
+	@git config --global init.defaultBranch main
 
 repos:
 	mr checkout
 
 mate:
-	dconf load / <~/mate-settings
-	rm ~/mate-settings
+	@if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
 	
 box: install config repos mate
