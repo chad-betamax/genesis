@@ -20,7 +20,7 @@ config:
 	@git config --global init.defaultBranch main
 
 repos:
-	mr checkout
+	cd ~; mr checkout
 
 mate:
 	@if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
