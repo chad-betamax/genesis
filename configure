@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+
+if test ! -f ~/.ssh/id_github
+then
+  echo "must have a sshkey for gitub before proceeding"
+  exit 1
+fi
+
+
+DISTRO=$(cat /etc/os-release|grep -w ^ID|awk -F= '{print$NF}')
+if test $DISTRO = 'ubuntu'
+then
+    mv ./Makefile.ubuntu ./Makefile
+fi

@@ -11,7 +11,7 @@ install:
 	sudo apt-get install -y $(BINARIES) 
 
 config:
-	@vcsh list
+	@vcsh list >/dev/null
 	@if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 	@cp pre-merge-unclobber $(HOOKDIR)/
 	@cp ./mrconfig ~/.mrconfig
@@ -20,7 +20,7 @@ config:
 	@git config --global init.defaultBranch main
 
 repos:
-	cd ~; mr checkout
+	@cd ~; mr checkout
 
 mate:
 	@if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
