@@ -28,4 +28,4 @@ mate:
 vim:
 	@vim +PluginInstall +qall
 	
-box: install git repos mate
+box: install git repos mate vim
