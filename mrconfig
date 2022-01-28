@@ -4,3 +4,7 @@ checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -
 [$HOME/.config/vcsh/repo.d/mate.git]
 checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -oIdentitiesOnly=yes" vcsh clone -b main git@github.com:chad-betamax/mate.git mate
 
+[$HOME/.config/vcsh/repo.d/vim.git]
+checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no
+-oIdentitiesOnly=yes" vcsh clone -b main git@github.com:chad-betamax/vim.git vim
+

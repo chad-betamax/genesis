@@ -10,7 +10,7 @@ install:
 	sudo apt-get update
 	sudo apt-get install -y $(BINARIES) 
 
-config:
+git:
 	@vcsh list >/dev/null
 	@if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 	@cp pre-merge-unclobber $(HOOKDIR)/
@@ -24,5 +24,8 @@ repos:
 
 mate:
 	@if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
+
+vim:
+	@vim +PluginInstall +qall
 	
-box: install config repos mate
+box: install git repos mate
