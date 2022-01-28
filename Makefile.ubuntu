@@ -1,7 +1,7 @@
 COMMITNAME := Doug
 COMMITEMAIL := doug@phoenox.net
 HOOKDIR := ~/.config/vcsh/hooks-enabled
-BINARIES := direnv bat htop httpie silversearcher-ag\
+BINARIES := direnv bat htop httpie silversearcher-ag pwgen\
        	    vim\
 	    vcsh myrepos\
 	    podman
