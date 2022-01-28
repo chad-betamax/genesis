@@ -1,10 +1,11 @@
 [$HOME/.config/vcsh/repo.d/bash.git]
-checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -oIdentitiesOnly=yes" vcsh clone -b main git@github.com:chad-betamax/bash.git bash
+checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no
+-oIdentitiesOnly=yes" vcsh clone -b bash git@github.com:chad-betamax/configs.git bash
 
 [$HOME/.config/vcsh/repo.d/mate.git]
-checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -oIdentitiesOnly=yes" vcsh clone -b main git@github.com:chad-betamax/mate.git mate
+checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no
+-oIdentitiesOnly=yes" vcsh clone -b mate git@github.com:chad-betamax/configs.git mate
 
 [$HOME/.config/vcsh/repo.d/vim.git]
-checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no
--oIdentitiesOnly=yes" vcsh clone -b main git@github.com:chad-betamax/vim.git vim
+checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -oIdentitiesOnly=yes" vcsh clone -b main git@github.com:chad-betamax/vim.git vim
 
