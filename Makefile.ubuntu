@@ -12,7 +12,7 @@ install:
 	sudo apt-get install -y $(BINARIES) 
 
 configs:
-	@if test ! -d $(FOXDIR); then mkdir $(FOXDIR); fi
+	@if test ! -d $(FOXDIR); then mkdir -p  $(FOXDIR); fi
 	@vcsh list >/dev/null
 	@if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 	@cp pre-merge-unclobber $(HOOKDIR)/
