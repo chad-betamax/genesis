@@ -13,10 +13,11 @@
 # (doing a git stash may be a more elegant way of doing this if I can be bothered)
 
 set -e
-BACKUP_DIR="$HOME/clobbered-by-vcsh/${VCSH_REPO_NAME}-$(date "+%F-%R")"
+BRANCH=$(git branch --format='%(refname:short)')
+BACKUP_DIR="$HOME/clobbered-by-vcsh/${VCSH_REPO_NAME}-$BRANCH-$(date "+%F-%R")"
 
 # move files out of the way
-for object in $(git ls-tree --name-only origin/bash); do
+for object in $(git ls-tree --name-only origin/$BRANCH); do
   if test -e $object; then
     # create the clobber directory
     [ ! -d "$BACKUP_DIR" ] && mkdir -p "$BACKUP_DIR"
@@ -26,3 +27,4 @@ for object in $(git ls-tree --name-only origin/bash); do
 done
 
 unset BACKUP_DIR
+unset BRANCH
