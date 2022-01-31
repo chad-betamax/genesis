@@ -1,6 +1,7 @@
 COMMITNAME := Doug
 COMMITEMAIL := doug@phoenox.net
 HOOKDIR := ~/.config/vcsh/hooks-enabled
+FOXDIR := ~/.mozilla/firefox
 BINARIES := direnv bat htop httpie silversearcher-ag pwgen\
        	    vim\
 	    vcsh myrepos\
@@ -10,7 +11,8 @@ install:
 	sudo apt-get update
 	sudo apt-get install -y $(BINARIES) 
 
-git:
+configs:
+	@if test ! -d $(FOXDIR); then mkdir $(FOXDIR); fi
 	@vcsh list >/dev/null
 	@if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 	@cp pre-merge-unclobber $(HOOKDIR)/
@@ -28,4 +30,4 @@ mate:
 vim:
 	@vim +PluginInstall +qall
 	
-box: install git repos mate vim
+box: install configs repos mate vim

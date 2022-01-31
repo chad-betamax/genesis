@@ -10,3 +10,6 @@ checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -
 [$HOME/.config/vcsh/repo.d/ssh.git]
 checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -oIdentitiesOnly=yes" vcsh clone -b ssh git@github.com:chad-betamax/configs.git ssh
 
+[$HOME/.config/vcsh/repo.d/firefox.git]
+checkout = GIT_SSH_COMMAND="ssh -i ~/.ssh/id_github -oStrictHostKeyChecking=no -oIdentitiesOnly=yes" vcsh clone -b firefox git@github.com:chad-betamax/configs.git firefox
+
