@@ -5,7 +5,7 @@ FOXDIR := ~/.mozilla/firefox
 BINARIES := direnv bat htop curl httpie silversearcher-ag pwgen\
        	    vim\
 	    vcsh myrepos\
-	    podman crun podman-docker docker-compose
+	    podman crun slirp4netns podman-docker docker-compose
 
 install:
 	sudo apt-get update

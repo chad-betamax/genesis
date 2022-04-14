@@ -1,8 +1,9 @@
 TL;DR: 
 
-$ cd ~/init
-$ ./configure
-$ make box
+    $ cd ~/init
+    $ ./configure
+    $ make box
+    $ ..; rm -r init
 
 
 
