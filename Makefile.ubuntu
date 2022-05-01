@@ -29,10 +29,10 @@ configs:
 
 .PHONY: mr
 mr:
-	MODULES := $(shell ls $(AVAIL)/|grep -v mr.vcsh)
 	@vcsh clone -b mr $(CONFIGSREPO)
 	@if test ! -d $(ENBL); then mkdir $(ENBL); fi
-	@cd $(ENBL); for i in $(MODULES); do ln -s $(AVAIL)/$i; done
+	@cd $(ENBL); for i in $(ls $(AVAIL)/|grep -v mr.vcsh); \
+		do ln -s $(AVAIL)/$i; done
 
 .PHONY: repos
 repos:
