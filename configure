@@ -13,3 +13,6 @@ if test $DISTRO = 'ubuntu'
 then
     sudo apt install -y python3-doit
 fi
+
+
+doit
