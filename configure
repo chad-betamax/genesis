@@ -11,5 +11,5 @@ fi
 DISTRO=$(cat /etc/os-release|grep -w ^ID|awk -F= '{print$NF}')
 if test $DISTRO = 'ubuntu'
 then
-    mv ./Makefile.ubuntu ./Makefile
+    sudo apt install -y python3-doit
 fi
