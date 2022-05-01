@@ -29,7 +29,7 @@ configs:
 
 .PHONY: mr
 mr:
-	@vcsh clone -b mr $(CONFIGSREPO)
+	@vcsh clone -b mr $(CONFIGSREPO) mr
 	@if test ! -d $(ENBL); then mkdir $(ENBL); fi
 	@cd $(ENBL); for i in $(ls $(AVAIL)/|grep -v mr.vcsh); \
 		do ln -s $(AVAIL)/$i; done
