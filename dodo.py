@@ -1,13 +1,13 @@
-def task_hello():
-    """hello"""
+def func_with_args(arg_first, arg_second):
+    print(arg_first)
+    print(arg_second)
+    return True
 
-    def python_hello(targets):
-        with open(targets[0], "a") as output:
-            output.write("Python says Hello World!!!\n")
-
+def task_call_func():
     return {
-        'actions': [python_hello],
-        'targets': ["hello.txt"],
-        }
-
-
+        'actions': [(func_with_args, [], {
+            'arg_second': 'This is a second argument.',
+            'arg_first': 'This is a first argument.'})
+        ],
+        'verbosity': 2,
+    }
