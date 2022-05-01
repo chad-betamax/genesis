@@ -1,33 +1,53 @@
 COMMITNAME := Doug
 COMMITEMAIL := doug@phoenox.net
+CONFIGSREPO := git@github.com:chad-betamax/configs.git
 HOOKDIR := ~/.config/vcsh/hooks-enabled
 FOXDIR := ~/.mozilla/firefox
-BINARIES := direnv bat htop curl httpie silversearcher-ag pwgen cloc jq\
-       	    vim\
+MRP := ~/.config/myrepos
+AVAIL := $(MRP)/available.d
+ENBL := $(MRP)/enabled.d
+MODULES := $(shell ls $(AVAIL)/|grep -v mr.vcsh)
+BINARIES := direnv bat htop silversearcher-ag pwgen cloc \
+            curl httpie jq \
+       	    tmux vim\
 	    vcsh myrepos\
-	    podman crun slirp4netns podman-docker docker-compose
+	    podman crun slirp4netns
 
+.PHONY: install
 install:
-	sudo apt-get update
-	sudo apt-get install -y $(BINARIES) 
+	@sudo apt-get update
+	@sudo apt-get install -y $(BINARIES) 
 
+.PHONY: configs
 configs:
 	@if test ! -d $(FOXDIR); then mkdir -p  $(FOXDIR); fi
 	@vcsh list >/dev/null
 	@if test ! -d $(HOOKDIR); then mkdir $(HOOKDIR); fi
 	@cp pre-merge-unclobber $(HOOKDIR)/
-	@cp ./mrconfig ~/.mrconfig
 	@git config --global user.email $(COMMITEMAIL)
 	@git config --global user.name $(COMMITNAME)
 	@git config --global init.defaultBranch main
 
+.PHONY: mr
+mr:
+	@vcsh clone -b mr $(CONFIGSREPO)
+	@if test ! -d $(ENBL); then mkdir $(ENBL); fi
+	@cd $(ENBL); for i in $(MODULES); do ln -s $(AVAIL)/$i; done
+
+.PHONY: repos
 repos:
 	@cd ~; mr checkout
 
+.PHONY: mate
 mate:
 	@if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
 
+.PHONY: tmux
+tmux:
+	@git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+.PHONY: vim
 vim:
 	@vim +PluginInstall +qall
 	
-box: install configs repos mate vim
+box: install configs mr repos mate tmux vim
