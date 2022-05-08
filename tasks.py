@@ -48,18 +48,19 @@ def prep(ctx):
     src = Path('pre-merge-unclobber').resolve()
     dest = Path(f'{conf}/vcsh/hooks-enabled/pre-merge-unclobber')
     shutil.copyfile(src, dest)
+    os.chmod(dest, 0o775)
 
     # some git configs
     commit_name = 'Doug'
     commit_email = 'doug@phoenox.net'
-    git_ssh = "ssh -i ~/.ssh/id_github -o StrictHostKeyChecking=no -o IdentitiesOnly=yes"
+    git_ssh = 'ssh -i ~/.ssh/id_github -o StrictHostKeyChecking=no -o IdentitiesOnly=yes'
     fmt = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
     flags = '--all --color --graph --abbrev-commit'
 
-    ctx.run("git config --global init.defaultBranch main")
-    ctx.run(f"git config --global user.name {commit_name}")
-    ctx.run(f"git config --global user.email {commit_email}")
-    ctx.run(f"git config --global core.sshCommand {git_ssh}")
+    ctx.run('git config --global init.defaultBranch main')
+    ctx.run(f'git config --global user.name {commit_name}')
+    ctx.run(f'git config --global user.email {commit_email}')
+    ctx.run(f'git config --global core.sshCommand "{git_ssh}"')
     ctx.run(f'git config --global alias.tree "log {flags} --pretty=format:{fmt}"')
 
 
@@ -82,10 +83,8 @@ def configs(ctx):
     if not repo.is_dir():
         origin = 'git@github.com:chad-betamax/configs.git'
 
-        # suck down config for myrepos
-        # vcsh doesn't allow --branch or --quiet
-        # ctx.run(f'vcsh clone -b mr {origin} mr >/dev/null')
         # use vcsh to deploy the config for myrepos
+        # (vcsh doesn't allow --branch or --quiet)
         sshkey = '~/.ssh/id_github'
         flags = '-oStrictHostKeyChecking=no -oIdentitiesOnly=yes'
         ctx.run(f'GIT_SSH_COMMAND="ssh -i {sshkey} {flags}" vcsh clone -b mr {origin} mr')
