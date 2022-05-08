@@ -4,36 +4,49 @@ import shutil
 import itertools
 from invoke import task
 
-tools = {
-    'misc_tools': ['direnv', 'bat', 'htop', 'silversearcher-ag', 'pwgen', 'cloc', ],
-    'web_tools': ['curl', 'httpie', 'jq',],
-    'edit_tools': ['tmux', 'vim', 'topydo',],
-    'config_tools': ['vcsh', 'myrepos',],
-    'container_tools': ['podman', 'crun', 'slirp4netns',]
-}
 
 
 
 @task
 def binaries(ctx):
+    """
+    install tools with your package manager
+
+    tools that you're happy to install with a package manager, implying we don't carte
+    too much about version etc (as we would if it were (say) pip)
+    for the moment we use apt-get, could add homebrew etc
+    """
+    print('\nrunning binaries')
+    tools = {
+        'misc_tools': ['direnv', 'bat', 'htop', 'silversearcher-ag', 'pwgen', 'cloc', ],
+        'web_tools': ['curl', 'httpie', 'jq',],
+        'edit_tools': ['tmux', 'vim', 'topydo',],
+        'config_tools': ['vcsh', 'myrepos',],
+        'container_tools': ['podman', 'crun', 'slirp4netns',]
+    }
     alltools = list(itertools.chain.from_iterable(tools.values()))
     ctx.run(f"sudo apt-get install -y {' '.join(alltools)}")
 
+# where most configs live
+conf = f'{Path.home()}/.config'
 
 @task
-def configs(ctx):
-    # make dirs for firefox and vcsh if needed
-    hook = '.config/vcsh/hooks-enabled'
-    fox = '.mozilla/firefox'
-    Path(f'{Path.home()}/{fox}').mkdir(parents=True, exist_ok=True)
-    Path(f'{Path.home()}/{hook}').mkdir(parents=True, exist_ok=True)
-
-    # this will create vcsh dirs needed
-    ctx.run("vcsh list >/dev/null")
-
+def prep(ctx):
+    """
+    some initial setup, to prep our box
+    """
+    print('\nrunning prep')
+    # make dirs for firefox
+    Path(f'{Path.home()}/.mozilla/firefox').mkdir(parents=True, exist_ok=True)
+    # and vcsh
+    Path(f'{conf}/vcsh/repo.d').mkdir(parents=True, exist_ok=True)
+    Path(f'{conf}/vcsh/hooks-enabled').mkdir(parents=True, exist_ok=True)
+    # and myrepos
+    Path(f'{conf}/myrepos/available.d').mkdir(parents=True, exist_ok=True)
+    Path(f'{conf}/myrepos/enabled.d').mkdir(parents=True, exist_ok=True)
     # place the git hook script used by vcsh
     src = Path('pre-merge-unclobber').resolve()
-    dest = Path(f'{Path.home()}/{hook}/pre-merge-unclobber')
+    dest = Path(f'{conf}/vcsh/hooks-enabled/pre-merge-unclobber')
     shutil.copyfile(src, dest)
 
     # some git configs
@@ -49,26 +62,49 @@ def configs(ctx):
 
 
 @task
-def myrepos(ctx):
+def configs(ctx):
     """
+    deploy config files for your favourite tools
+
     use vcsh to suck down the config for myrepos
     then run myrepos
     myrepos will then in turn use vcsh to suck down the configs for the various tools
-    where you are the version controling their configs
+    which are version controlled (the config is version controlled that is)
     """
-    repo = 'git@github.com:chad-betamax/configs.git'
-    myr = f"{Path.home()}/.config/myrepos"
-    avail = f"{myr}/available.d"
-    enabled = f"{myr}/enabled.dr"
-    ctx.run(f'vcsh clone --branch mr {repo} mr')
-    Path(f"{enabled}").mkdir(parents=True, exist_ok=True)
-    for app in os.listdir(avail):
-        ctx.run(f"ln --symbolic {avail}/{app} {enabled}/{app}")
+    print('\nrunning configs')
 
     #make sure we're in ~
     os.chdir(Path.home())
-    ctx.run('mr checkout')
 
+    repo = Path(f"{conf}/vcsh/repo.d/mr.git")
+    if not repo.is_dir():
+        origin = 'git@github.com:chad-betamax/configs.git'
+
+        # suck down config for myrepos
+        # vcsh doesn't allow --branch or --quiet
+        # ctx.run(f'vcsh clone -b mr {origin} mr >/dev/null')
+        # use vcsh to deploy the config for myrepos
+        sshkey = '~/.ssh/id_github'
+        flags = '-oStrictHostKeyChecking=no -oIdentitiesOnly=yes'
+        ctx.run(f'GIT_SSH_COMMAND="ssh -i {sshkey} {flags}" vcsh clone -b mr {origin} mr')
+
+        # that sets up mr so it now knows what tools are available for tracking
+        # at the moment we're enabling all of em
+        avail = f"{conf}/myrepos/available.d"
+        enbl = f"{conf}/myrepos/enabled.d"
+        for app in os.listdir(avail):
+            ctx.run(f"ln --symbolic {avail}/{app} {enbl}/{app}")
+
+        # and use mr to suck down the config files
+        ctx.run('mr checkout')
+
+    else:
+        print('myrepos already tracked .. exiting')
+
+
+@task(binaries, prep, configs)
+def genesis(ctx):
+    print("building box")
 
 # .PHONY: mr
 # mr:
