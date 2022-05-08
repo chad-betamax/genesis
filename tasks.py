@@ -64,7 +64,7 @@ def prep(ctx):
     ctx.run(f'git config --global alias.tree "log {flags} --pretty=format:{fmt}"')
 
 
-@task
+@task(prep)
 def configs(ctx):
     """
     deploy config files for your favourite tools
@@ -103,20 +103,10 @@ def configs(ctx):
         print('myrepos already tracked .. exiting')
 
 
-@task(binaries, prep, configs)
+@task(binaries, configs)
 def genesis(ctx):
-    print("building box")
+    print("All done!")
 
-# .PHONY: mr
-# mr:
-	# @vcsh clone -b mr $(CONFIGSREPO) mr
-	# @if test ! -d $(ENBL); then mkdir $(ENBL); fi
-	# @cd $(ENBL); for i in $(ls $(AVAIL)/|grep -v mr.vcsh); \
-		# do ln -s $(AVAIL)/$i; done
-
-# .PHONY: repos
-# repos:
-	# @cd ~; mr checkout
 
 # .PHONY: mate
 # mate:
