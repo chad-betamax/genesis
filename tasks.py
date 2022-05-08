@@ -52,12 +52,14 @@ def prep(ctx):
     # some git configs
     commit_name = 'Doug'
     commit_email = 'doug@phoenox.net'
+    git_ssh = "ssh -i ~/.ssh/id_github -o StrictHostKeyChecking=no -o IdentitiesOnly=yes"
     fmt = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
     flags = '--all --color --graph --abbrev-commit'
 
     ctx.run("git config --global init.defaultBranch main")
     ctx.run(f"git config --global user.name {commit_name}")
     ctx.run(f"git config --global user.email {commit_email}")
+    ctx.run(f"git config --global core.sshCommand {git_ssh}")
     ctx.run(f'git config --global alias.tree "log {flags} --pretty=format:{fmt}"')
 
 
