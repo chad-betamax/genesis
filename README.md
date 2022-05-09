@@ -2,7 +2,7 @@ TL;DR:
 
     $ cd ~/init
     $ ./configure
-    $ make box
+    $ invoke genesis
     $ ..; rm -r init
 
 
