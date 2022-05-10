@@ -107,7 +107,7 @@ def configs(ctx):
             ctx.run(f"ln --symbolic {avail}/{app} {enbl}/{app}")
 
         # and use mr to suck down the config files
-        ctx.run('mr checkout')
+        ctx.run('mr update')  # implicitly does a checkout if needed
 
     else:
         print('myrepos already tracked .. exiting')
