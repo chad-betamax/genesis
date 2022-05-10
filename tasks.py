@@ -12,7 +12,7 @@ def binaries(ctx):
     """
     install tools with your package manager
 
-    tools that you're happy to install with a package manager, implying we don't carte
+    tools that you're happy to install with a package manager, implying we don't care
     too much about version etc (as we would if it were (say) pip)
     for the moment we use apt-get, could add homebrew etc
     """
@@ -102,8 +102,18 @@ def configs(ctx):
     else:
         print('myrepos already tracked .. exiting')
 
+@task()
+def plugins(ctx):
+    """
+    install the various plugins for vim and tmux
+    (both use plugin managers; vundle and tpm respectively)
+    """
+    print('\ninstalling vim plugins')
+    ctx.run('vim +PluginInstall +qall')
+    print('\ninstalling tmux plugin manager')
+    ctx.run('git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm')
 
-@task(binaries, configs)
+@task(binaries, configs, plugins)
 def genesis(ctx):
     print("All done!")
 
@@ -112,12 +122,5 @@ def genesis(ctx):
 # mate:
 	# @if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
 
-# .PHONY: tmux
-# tmux:
-	# @git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-# .PHONY: vim
-# vim:
-	# @vim +PluginInstall +qall
 
 # box: install configs mr repos mate tmux vim
