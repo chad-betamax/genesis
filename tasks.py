@@ -20,12 +20,18 @@ def binaries(ctx):
     tools = {
         'misc_tools': ['direnv', 'bat', 'htop', 'silversearcher-ag', 'pwgen', 'cloc', ],
         'web_tools': ['curl', 'httpie', 'jq',],
+        'DB_tools': ['postgresql-client-14']
         'edit_tools': ['tmux', 'vim', 'topydo',],
         'config_tools': ['vcsh', 'myrepos',],
         'container_tools': ['podman', 'crun', 'slirp4netns',]
     }
     alltools = list(itertools.chain.from_iterable(tools.values()))
     ctx.run(f"sudo apt-get install -y {' '.join(alltools)}")
+
+    # DBmate not available with apt...
+    url = 'https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64'
+    ctx.run(f'sudo curl -fsSL -o /usr/local/bin/dbmate {url}')
+
 
 # where most configs live
 conf = f'{Path.home()}/.config'
@@ -57,6 +63,10 @@ def prep(ctx):
     fmt = '%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
     flags = '--all --color --graph --abbrev-commit'
 
+    """
+    git needs some of these vars to run (on a fresh box)... which means we are keeping
+    git config here rather than tracking it with vcsh/mr
+    """
     ctx.run('git config --global init.defaultBranch main')
     ctx.run(f'git config --global user.name {commit_name}')
     ctx.run(f'git config --global user.email {commit_email}')
@@ -90,9 +100,9 @@ def configs(ctx):
         ctx.run(f'GIT_SSH_COMMAND="ssh -i {sshkey} {flags}" vcsh clone -b mr {origin} mr')
 
         # that sets up mr so it now knows what tools are available for tracking
-        # at the moment we're enabling all of em
         avail = f"{conf}/myrepos/available.d"
         enbl = f"{conf}/myrepos/enabled.d"
+        # at the moment we're enabling all of em
         for app in os.listdir(avail):
             ctx.run(f"ln --symbolic {avail}/{app} {enbl}/{app}")
 
