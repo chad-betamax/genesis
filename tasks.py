@@ -20,7 +20,7 @@ def binaries(ctx):
     tools = {
         'misc_tools': ['direnv', 'bat', 'htop', 'silversearcher-ag', 'pwgen', 'cloc', ],
         'web_tools': ['curl', 'httpie', 'jq',],
-        'DB_tools': ['postgresql-client-14']
+        'DB_tools': ['postgresql-client-14'],
         'edit_tools': ['tmux', 'vim', 'topydo',],
         'config_tools': ['vcsh', 'myrepos',],
         'container_tools': ['podman', 'crun', 'slirp4netns',]
@@ -125,7 +125,8 @@ def plugins(ctx):
 
 @task(binaries, configs, plugins)
 def genesis(ctx):
-    print("All done!")
+    sunnies = '😎️'
+    print(f'All done!\n{sunnies}')
 
 
 # .PHONY: mate
