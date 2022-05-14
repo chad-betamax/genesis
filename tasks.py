@@ -135,13 +135,20 @@ def plugins(ctx):
     install the various plugins for vim and tmux
     (both use plugin managers; vundle and tpm respectively)
     """
+    # Vim
     print('\ninstalling vim plugins')
     ctx.run('vim +PluginInstall +qall')
+
+    # Tmux
     print('\ninstalling tmux plugin manager')
-    if not Path(Path.home()/'.tmux/plugins/tpm').is_dir():
-        ctx.run('git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm')
+    tpm = Path.home()/'.tmux/plugins/tpm'
+    if not tpm.is_dir():
+        ctx.run(f'git clone https://github.com/tmux-plugins/tpm {tpm}')
+        ctx.run(f'{tpm}/bin/install_plugins')
     else:
         print('looks like tmux plugin manager already installed')
+        ctx.run(f'{tpm}/bin/install_plugins')
+
 
 @task()
 def firefox(ctx):
