@@ -49,6 +49,7 @@ def binaries(ctx):
     ctx.run(f"sudo apt-get install -y {' '.join(alltools)}")
 
     # DBmate not available with apt...
+    # TODO: some logic to only d/l when latest version changes (& isn't installed)
     url = 'https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64'
     ctx.run(f'sudo curl -fsSL -o /usr/local/bin/dbmate {url}')
 
@@ -61,9 +62,7 @@ def prep(ctx):
     """
     some initial setup, to prep our box
     """
-    # make dirs for firefox
-    Path(f'{Path.home()}/.mozilla/firefox').mkdir(parents=True, exist_ok=True)
-    # and vcsh
+    # make dirs for vcsh
     Path(f'{conf}/vcsh/repo.d').mkdir(parents=True, exist_ok=True)
     Path(f'{conf}/vcsh/hooks-enabled').mkdir(parents=True, exist_ok=True)
     # and myrepos
@@ -145,9 +144,28 @@ def plugins(ctx):
         print('looks like tmux plugin manager already installed')
 
 @task()
+def firefox(ctx):
+    # make dir where firefox add-ons will live
+    moz = f'{Path.home()}/.mozilla/extensions'
+    Path(moz).mkdir(parents=True, exist_ok=True)
+    os.chmod(moz, 0o775)
+
+    root = 'https://addons.mozilla.org/firefox/downloads/file'
+    stems = {
+        '3878852': 'startpage_privacy_protection-1.0.0-fx.xpi',
+        '3933192': 'ublock_origin-1.42.4-an+fx.xpi'
+    }
+    for num,name in stems.items():
+        if not Path(f'{moz}/{name}').is_file():
+            ctx.run(f'curl -fsSL -o {moz}/{name} {root}/{num}/{name}')
+    # TODO: get firefox to pick up these add-ons automatically
+    # at the moment have use "Install add-on from file" from inside Firefox
+
+
+@task()
 def mate(ctx):
     """
-    if you're using a Mate desktop (which you should)
+    if you're using a Mate desktop
     then apply these settings using dconf
     """
     if os.environ.get('XDG_CURRENT_DESKTOP') == 'MATE':
