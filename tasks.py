@@ -4,10 +4,30 @@ import shutil
 import itertools
 from invoke import task
 
-
-
-
 @task
+def psql(ctx):
+    """
+    DBmate runs locally and requires the version of the postgres client tools to be
+    in-sync with the version of postgres you're using on the container. The default
+    Ubuntu repos have an older version; therefore we have to do some shenanigans and add
+    this repo in so a later apt-get will install the version want (ie that is in syc
+    with the posgres version used on the container)
+    """
+    repo = 'http://apt.postgresql.org/pub/repos/apt'
+    aptpath = '/etc/apt/sources.list.d/pgdg.list'
+    ctx.run(f'sudo sh -c \'echo "deb {repo} $(lsb_release -cs)-pgdg main">{aptpath}\'')
+
+    url = 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
+    ctx.run(f'wget --quiet -O - {url} | sudo apt-key add -')  # failing here, need to
+    # swap out the apt-key see:
+    # https://askubuntu.com/questions/1286545/what-commands-exactly-should-replace-the-deprecated-apt-key
+    # also this may be useful:
+    # https://github.com/ameinild/add-apt-key
+    ctx.run('sudo apt-get update')
+
+
+# @task(psql)
+@task()
 def binaries(ctx):
     """
     install tools with your package manager
@@ -20,7 +40,7 @@ def binaries(ctx):
     tools = {
         'misc_tools': ['direnv', 'bat', 'htop', 'silversearcher-ag', 'pwgen', 'cloc', ],
         'web_tools': ['curl', 'httpie', 'jq',],
-        'DB_tools': ['postgresql-client-14'],
+        # 'DB_tools': ['postgresql-client-14'],
         'edit_tools': ['tmux', 'vim', 'topydo',],
         'config_tools': ['vcsh', 'myrepos',],
         'container_tools': ['podman', 'crun', 'slirp4netns',]
@@ -41,7 +61,6 @@ def prep(ctx):
     """
     some initial setup, to prep our box
     """
-    print('\nrunning prep')
     # make dirs for firefox
     Path(f'{Path.home()}/.mozilla/firefox').mkdir(parents=True, exist_ok=True)
     # and vcsh
@@ -105,12 +124,11 @@ def configs(ctx):
         # at the moment we're enabling all of em
         for app in os.listdir(avail):
             ctx.run(f"ln --symbolic {avail}/{app} {enbl}/{app}")
-
-        # and use mr to suck down the config files
-        ctx.run('mr update')  # implicitly does a checkout if needed
-
     else:
-        print('myrepos already tracked .. exiting')
+        print('myrepos already tracked... skip to updating the other repos')
+
+    # and use mr to suck down the config files
+    ctx.run('mr update')  # implicitly does a checkout if needed
 
 @task()
 def plugins(ctx):
@@ -121,17 +139,22 @@ def plugins(ctx):
     print('\ninstalling vim plugins')
     ctx.run('vim +PluginInstall +qall')
     print('\ninstalling tmux plugin manager')
-    ctx.run('git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm')
+    if not Path(Path.home()/'.tmux/plugins/tpm').is_dir():
+        ctx.run('git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm')
+    else:
+        print('looks like tmux plugin manager already installed')
 
-@task(binaries, configs, plugins)
+@task()
+def mate(ctx):
+    """
+    if you're using a Mate desktop (which you should)
+    then apply these settings using dconf
+    """
+    if os.environ.get('XDG_CURRENT_DESKTOP') == 'MATE':
+        ctx.run('dconf load / <~/.config/mate/mate-settings')
+
+
+@task(binaries, configs, plugins, mate)
 def genesis(ctx):
     sunnies = '😎️'
-    print(f'All done!\n{sunnies}')
-
-
-# .PHONY: mate
-# mate:
-	# @if test -f ~/mate-settings; then dconf load / <~/mate-settings; rm ~/mate-settings; fi
-
-
-# box: install configs mr repos mate tmux vim
+    print(f'All done!  {sunnies *3}')
