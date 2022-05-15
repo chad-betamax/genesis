@@ -42,7 +42,7 @@ def binaries(ctx):
         'web_tools': ['curl', 'httpie', 'jq',],
         # 'DB_tools': ['postgresql-client-14'],
         'edit_tools': ['tmux', 'vim', 'topydo',],
-        'dependencies': ['python3-libtmux', 'entr',],
+        'dependencies': ['python3-libtmux', 'entr', 'xsel'],
         'config_tools': ['vcsh', 'myrepos',],
         'container_tools': ['podman', 'crun', 'slirp4netns',]
     }
@@ -50,9 +50,10 @@ def binaries(ctx):
     ctx.run(f"sudo apt-get install -y {' '.join(alltools)}")
 
     # DBmate not available with apt...
-    # TODO: some logic to only d/l when latest version changes (& isn't installed)
-    url = 'https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64'
-    ctx.run(f'sudo curl -fsSL -o /usr/local/bin/dbmate {url}')
+    installpath = '/usr/local/bin/dbmate'
+    if not Path(installpath).is_file():
+        url = 'https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64'
+        ctx.run(f'sudo curl -fsSL -o {installpath} {url}')
 
 
 # where most configs live
