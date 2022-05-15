@@ -41,7 +41,7 @@ def binaries(ctx):
         'misc_tools': ['direnv', 'bat', 'htop', 'silversearcher-ag', 'pwgen', 'cloc', ],
         'web_tools': ['curl', 'httpie', 'jq',],
         # 'DB_tools': ['postgresql-client-14'],
-        'edit_tools': ['tmux', 'vim', 'topydo',],
+        'edit_tools': ['tmux', 'vim', 'topydo', 'entr'],
         'config_tools': ['vcsh', 'myrepos',],
         'container_tools': ['podman', 'crun', 'slirp4netns',]
     }
