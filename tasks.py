@@ -42,7 +42,7 @@ def binaries(ctx):
         'web_tools': ['curl', 'httpie', 'jq',],
         # 'DB_tools': ['postgresql-client-14'],
         'edit_tools': ['tmux', 'vim', 'topydo',],
-        'dependencies': ['python3-libtmux', 'entr', 'xsel'],
+        'dependencies': ['python3-pip', 'python3-libtmux', 'entr', 'xsel'],
         'config_tools': ['vcsh', 'myrepos',],
         'container_tools': ['podman', 'crun', 'slirp4netns',]
     }
@@ -55,6 +55,9 @@ def binaries(ctx):
         url = 'https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64'
         ctx.run(f'sudo curl -fsSL -o {installpath} {url}')
 
+
+    # language-server only avail thru pip...
+    ctx.run('pip install python-language-server')
 
 # where most configs live
 conf = f'{Path.home()}/.config'
