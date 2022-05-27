@@ -45,12 +45,12 @@ def binaries(ctx, show=False, pm="apt"):
     if pm == "apt":
         tools = debian.packages()
         OSinstaller = debian.apt
-    elif pm == 'homebrew':
-        print('go home Apple fanboy')
+    elif pm == "homebrew":
+        print("go home Apple fanboy")
         return
     else:
-        pms = ['apt', 'homebrew']
-        print(f'choose from these package managers: {pms}')
+        pms = ["apt", "homebrew"]
+        print(f"choose from these package managers: {pms}")
         return
 
     if show:
@@ -117,8 +117,7 @@ def configs(ctx):
     """
     deploy config files for your favourite tools
 
-    use vcsh to suck down the config for myrepos
-    then run myrepos
+    use vcsh to suck down the config for myrepos then run myrepos
     myrepos will then in turn use vcsh to suck down the configs for the various tools
     which are version controlled (the config is version controlled that is)
     """
@@ -155,10 +154,16 @@ def configs(ctx):
 @task(post=[configs])
 def cron(ctx):
     """
-    push all the dotfile vcsh repos to github every hour using myrepos/mr
+    setup crontabs
     """
-    line = '"5 8-23 * * * /usr/bin/mr push"'
-    ctx.run(f"(crontab -u $USER -l; echo {line})|sort --unique|crontab -u $USER -")
+    # push all dotfile vcsh repos to github every hour using myrepos/mr
+    mr = '"5 8-23 * * * /usr/bin/mr push"'
+    ctx.run(f"(crontab -u $USER -l; echo {mr})|sort --unique|crontab -u $USER -")
+
+    # capture MATE desktop settings
+    dconf = '"0 19 * * * /usr/bin/dconf / >~/.config/mate/mate-settings"'
+    ctx.run(f"(crontab -u $USER -l; echo {dconf})|sort --unique|crontab -u $USER -")
+
 
 
 @task()
