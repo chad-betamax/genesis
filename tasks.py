@@ -69,7 +69,7 @@ def binaries(ctx, show=False, pm="apt"):
         ctx.run(f"sudo curl -fsSL -o {installpath} {url}")
 
     # language-server only avail thru pip...
-    ctx.run("pip install python-language-server")
+    ctx.run("pip install python-lsp-server")
 
 
 @task
@@ -189,6 +189,11 @@ def plugins(ctx):
 
 @task()
 def firefox(ctx):
+    """
+    install some firefox plugins
+
+    NB needs to be also manually enabled from within FF
+    """
     # make dir where firefox add-ons will live
     moz = f"{Path.home()}/.mozilla/extensions"
     Path(moz).mkdir(parents=True, exist_ok=True)
@@ -209,8 +214,9 @@ def firefox(ctx):
 @task()
 def mate(ctx):
     """
-    if you're using a Mate desktop
-    then apply these settings using dconf
+    config the Mate desktop
+    
+    apply settings using dconf
     """
     if os.environ.get("XDG_CURRENT_DESKTOP") == "MATE":
         ctx.run("dconf load / <~/.config/mate/mate-settings")
