@@ -13,6 +13,7 @@ def packages():
     tools = {
         # misc_tools
         "direnv": "per-project ENV vars",
+        "fasd": "speed up the CLI",
         "bat": "cat on steroids",
         "htop": "top on steroids",
         "silversearcher-ag": "faster grep",
