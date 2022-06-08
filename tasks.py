@@ -7,6 +7,8 @@ import debian
 
 # where most configs live
 conf = f"{Path.home()}/.config"
+# sshkey used on the chad-betamax github account
+betamax = 'id_github_betamax'
 
 
 @task
@@ -94,7 +96,7 @@ def prep(ctx):
     commit_name = "Doug"
     commit_email = "doug@phoenox.net"
     git_ssh = (
-        "ssh -i ~/.ssh/id_github_betamax -o StrictHostKeyChecking=no -o IdentitiesOnly=yes"
+        f"ssh -i ~/.ssh/{betamax} -o StrictHostKeyChecking=no -o IdentitiesOnly=yes"
     )
     fmt = (
         "%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"
@@ -132,7 +134,7 @@ def configs(ctx):
 
         # use vcsh to deploy the config for myrepos
         # (NB vcsh doesn't allow long options eg --branch)
-        sshkey = "~/.ssh/id_github"
+        sshkey = f"~/.ssh/{betamax}"
         flags = "-oStrictHostKeyChecking=no -oIdentitiesOnly=yes"
         ctx.run(
             f'GIT_SSH_COMMAND="ssh -i {sshkey} {flags}" vcsh clone -b mr {origin} mr'
@@ -215,7 +217,7 @@ def firefox(ctx):
 def mate(ctx):
     """
     config the Mate desktop
-    
+
     apply settings using dconf
     """
     if os.environ.get("XDG_CURRENT_DESKTOP") == "MATE":
