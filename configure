@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-if test ! -f ~/.ssh/id_github
+if test ! -f ~/.ssh/id_github_betamax
 then
   echo "must have a sshkey for gitub before proceeding"
   exit 1
