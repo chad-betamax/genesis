@@ -94,7 +94,7 @@ def prep(ctx):
     commit_name = "Doug"
     commit_email = "doug@phoenox.net"
     git_ssh = (
-        "ssh -i ~/.ssh/id_github -o StrictHostKeyChecking=no -o IdentitiesOnly=yes"
+        "ssh -i ~/.ssh/id_github_betamax -o StrictHostKeyChecking=no -o IdentitiesOnly=yes"
     )
     fmt = (
         "%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"
