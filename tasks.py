@@ -8,7 +8,7 @@ import debian
 # where most configs live
 conf = f"{Path.home()}/.config"
 # sshkey used on the chad-betamax github account
-betamax = 'id_github_betamax'
+betamax = 'shrek-git@github.com'
 
 
 @task
