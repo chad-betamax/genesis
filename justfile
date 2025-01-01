@@ -7,9 +7,7 @@ default:
     @just --list
 
 apt-installs: 
-    # Initialise apt
-    @apt update
-    @apt autoremove
+    @just apt::initialise
 
     @just apt::get "git"
     @just apt::get "tmux"
@@ -23,6 +21,7 @@ apt-installs:
     @just apt::get "direnv"
     @just apt::get "tree"
     @just apt::get "openssh-server"
+    @just apt::get "sshfs"
 
 dradeb := "dra_0.7.0-1_amd64.deb"
 curl-installs:
@@ -51,10 +50,14 @@ dra-installs:
     #faster find
     @just dra::install "sharkdp/fd"
 
-    # deploy config dotfiles
+    # chezmoi a dotfile manager
+    @sudo rm /usr/local/bin/chezmoi* 2>/dev/null
     @just dra::install "twpayne/chezmoi" 
     @sudo mv /usr/local/bin/chezmoi* /usr/local/bin/chezmoi 
 
 # Install all the things
 deploy: apt-installs curl-installs dra-installs
 
+# misc tidy up
+tidy:
+    @rmdir ~/Public ~/Templates ~/Videos
