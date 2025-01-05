@@ -105,7 +105,6 @@ _dotfiles:
 [group('config')]
 _tmux:                                                                                         
     #!/usr/bin/env sh
-    # MAN=~/.config/tmux/plugins/tpm
     MAN={{config_directory()}}/tmux/plugins/tpm
     if [ -d $MAN ]
     then
