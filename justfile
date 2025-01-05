@@ -6,7 +6,7 @@ _default:
     @just --list
 
 _paths :="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-_boxinit:
+_tidypath:
     @echo 'PATH="{{ _paths }}"' | sudo tee /etc/environment > /dev/null
 
 
@@ -45,6 +45,18 @@ curl-installs:
     @curl --silent --show-error --location {{ _dra }} --output-dir /tmp --output dra.deb
     @sudo dpkg --install /tmp/dra.deb
 
+[group('install')]
+git-installs:
+    #!/usr/bin/env sh
+    META={{executable_directory()}}/metatools
+    if [ -d $META ]
+    then
+        cd $META; git checkout . ; git pull
+    else
+        cd {{executable_directory()}}
+        git clone https://github.com/chad-betamax/metatools.git 
+    fi
+
 
 [group('install')]
 dra-installs:
@@ -79,27 +91,54 @@ dra-installs:
 
 # Install all the things
 [group('install')]
-install: _boxinit apt-installs curl-installs dra-installs
+install: _tidypath apt-installs curl-installs dra-installs
+
+
+
 
 [group('config')]
 _dotfiles:
-    @just chezmoi 
-    @echo dotfiles...
+    @printf 'deploying dotfiles...\n'
+    @chezmoi init --apply --verbose https://github.com/chad-betamax/dotfiles.git
+    @printf 'dotfile config done\n\n'
 
 [group('config')]
-_plugins:
-    @echo plugins...
+_tmux:                                                                                         
+    #!/usr/bin/env sh
+    # MAN=~/.config/tmux/plugins/tpm
+    MAN={{config_directory()}}/tmux/plugins/tpm
+    if [ -d $MAN ]
+    then
+        printf "tpm already installed; doing update...\n"
+        $MAN/bin/clean_plugins
+        $MAN/bin/update_plugins all
+        printf "\n"
+    else
+        printf "installing tmux plugins"
+        mkdir -p $MAN
+        git clone https://github.com/tmux-plugins/tpm $MAN && $MAN/bin/install_plugins
+    fi                                                                                                                  
+            
 
+[group('config')]
+_neovim:
+    @printf "neovim plugins\n"
+
+
+
+[group('config')]
+_plugins: _tmux _neovim
+    @echo 'all done with plugins...'
 
 # deploy dotfiles and plugins for all your programs
 [group('config')]
-configs: _dotfiles _plugins
-    @echo "All done!"
+config: _dotfiles _plugins
+    @printf "\nConfig all done!\n"
 
 # misc tidy up
 [group('config')]
-tidy:
-    @rmdir ~/Public ~/Templates ~/Videos 
+tidydirs:
+    @rmdir ~/Public ~/Templates ~/Videos 2>/dev/null
 
 #still to do
 # configs
