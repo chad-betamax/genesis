@@ -108,9 +108,11 @@ _tmux:
     MAN={{config_directory()}}/tmux/plugins/tpm
     if [ -d $MAN ]
     then
-        printf "tpm already installed; doing update...\n"
+        printf "tpm already installed; doing updates...\n"
         $MAN/bin/clean_plugins
         $MAN/bin/update_plugins all
+        # needed to catch new plugins 
+        $MAN/bin/install_plugins
         printf "\n"
     else
         printf "installing tmux plugins"
