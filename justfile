@@ -31,7 +31,7 @@ apt-installs:
     @just apt::get "openssh-server"
     @just apt::get "sshfs"
 
-_dra := "https://github.com/devmatteini/dra/releases/download/0.7.0/dra_0.7.0-1_amd64.deb"
+_dra := "https://raw.githubusercontent.com/devmatteini/dra/refs/heads/main/install.sh"
 _rust := "https://sh.rustup.rs"
 [group('install')]
 curl-installs:
@@ -41,9 +41,8 @@ curl-installs:
     # Install rust
     @curl --proto '=https' --tlsv1.2 {{ _rust }} --silent --show-error --fail|sh -s -- -y --no-modify-path
 
-    # Install dra
-    @curl --silent --show-error --location {{ _dra }} --output-dir /tmp --output dra.deb
-    @sudo dpkg --install /tmp/dra.deb
+    # Install dra (a Github downloader)
+    curl --proto '=https' --tlsv1.2 -sSf {{ _dra }} | sudo bash -s -- --to /usr/local/bin/
 
 [group('install')]
 git-installs:
