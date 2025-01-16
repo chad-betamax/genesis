@@ -1,6 +1,4 @@
-mod apt "modules/apt.just"
-mod dra "modules/dra.just"
-
+import 'installs.just'
 
 _default:
     @just --list
@@ -9,83 +7,6 @@ _paths :="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 _tidypath:
     @echo 'PATH="{{ _paths }}"' | sudo tee /etc/environment > /dev/null
 
-
-[group('install')]
-apt-installs: 
-    # Apt installs
-    # #############################################
-
-    @just apt::initialise
-
-    @just apt::get "git"
-    @just apt::get "tmux"
-    @just apt::get "traceroute"
-    @just apt::get "xclip"
-    @just apt::get "nmap"
-    @just apt::get "htop"
-    @just apt::get "members"
-    @just apt::get "keychain"
-    @just apt::get "jq"
-    @just apt::get "direnv"
-    @just apt::get "tree"
-    @just apt::get "openssh-server"
-    @just apt::get "sshfs"
-
-_dra := "https://raw.githubusercontent.com/devmatteini/dra/refs/heads/main/install.sh"
-_rust := "https://sh.rustup.rs"
-[group('install')]
-curl-installs:
-    # Curl installs
-    # #############################################
-
-    # Install rust
-    @curl --proto '=https' --tlsv1.2 {{ _rust }} --silent --show-error --fail|sh -s -- -y --no-modify-path
-
-    # Install dra (a Github downloader)
-    curl --proto '=https' --tlsv1.2 -sSf {{ _dra }} | sudo bash -s -- --to /usr/local/bin/
-
-[group('install')]
-git-installs:
-    #!/usr/bin/env sh
-    META={{executable_directory()}}/metatools
-    if [ -d $META ]
-    then
-        cd $META; git checkout . ; git pull
-    else
-        cd {{executable_directory()}}
-        git clone https://github.com/chad-betamax/metatools.git 
-    fi
-
-
-[group('install')]
-dra-installs:
-    # Dra installs
-    # #############################################
-
-    # rage encryption, used by chezmoi
-    @just dra::multi "str4d/rage" "rage rage-keygen rage-mount"
-
-    # chezmoi a dotfile manager
-    @sudo rm /usr/local/bin/chezmoi* 2>/dev/null
-    @just dra::install "twpayne/chezmoi" 
-    @sudo mv /usr/local/bin/chezmoi* /usr/local/bin/chezmoi 
-
-    # dra can't install neovim as it creates dirs, use as a downloader only
-    @just dra::download "neovim/neovim"
-    # tar extract into /opt
-    @sudo tar --directory /opt -xzf /tmp/nvim*.tar.gz
-
-    # rg, a faster grep
-    @just dra::install "BurntSushi/ripgrep" 
-
-    # bat, cat with syntax highlighting
-    @just dra::install "sharkdp/bat"
-
-    #faster find
-    @just dra::install "sharkdp/fd"
-
-    # delta, syntax highlighting for git, diff and grep output 
-    @just dra::install "dandavison/delta" 
 
 
 # Install all the things
@@ -104,19 +25,19 @@ _dotfiles:
 [group('config')]
 _tmux:                                                                                         
     #!/usr/bin/env sh
-    MAN={{config_directory()}}/tmux/plugins/tpm
-    if [ -d $MAN ]
+    MANAGER={{config_directory()}}/tmux/plugins/tpm
+    if [ -d $MANAGER ]
     then
         printf "tpm already installed; doing updates...\n"
-        $MAN/bin/clean_plugins
-        $MAN/bin/update_plugins all
+        $MANAGER/bin/clean_plugins
+        $MANAGER/bin/update_plugins all
         # needed to catch new plugins 
-        $MAN/bin/install_plugins
+        $MANAGER/bin/install_plugins
         printf "\n"
     else
         printf "installing tmux plugins"
-        mkdir -p $MAN
-        git clone https://github.com/tmux-plugins/tpm $MAN && $MAN/bin/install_plugins
+        mkdir -p $MANAGER
+        git clone https://github.com/tmux-plugins/tpm $MANAGER && $MANAGER/bin/install_plugins
     fi                                                                                                                  
             
 
@@ -146,6 +67,6 @@ tidydirs:
 # chezmoi completions
 # tmux plugins
 # neovim plugins
-# source bashrc
+# source bashrc at very end
 
 
