@@ -57,7 +57,7 @@ git-installs:
     #!/usr/bin/env sh
     # if already installed do nothing 
     META={{executable_directory()}}/metatools
-    if [ ! -d $META ]
+    if [ ! -d $META ]; then
         cd {{executable_directory()}}
         git clone https://github.com/chad-betamax/metatools.git 
     fi
