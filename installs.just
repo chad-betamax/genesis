@@ -16,6 +16,7 @@ apt-installs:
 
     @just apt::initialise
 
+    @just apt::get "signal-desktop"
     @just apt::get "git"
     @just apt::get "tmux"
     @just apt::get "traceroute"
@@ -92,6 +93,9 @@ dra-installs:
 
     # interact with Github with a cli 
     @just dra::install "cli/cli"
+
+    # a to-do list 
+    @just dra::install Fanteria/todotxt-tui
 
     # a cli snapshot manager
     # @just dra::install "kimono-koans/httm"
