@@ -2,6 +2,13 @@ mod apt "modules/apt.just"
 mod dra "modules/dra.just"
 
 
+
+_paths :="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+[group('install')]
+_tidypath:
+    @echo 'PATH="{{ _paths }}"' | sudo tee /etc/environment > /dev/null
+
+
 [group('install')]
 apt-installs: 
     # Apt installs
@@ -47,11 +54,9 @@ curl-installs:
 [group('install')]
 git-installs:
     #!/usr/bin/env sh
+    # if already installed do nothing 
     META={{executable_directory()}}/metatools
-    if [ -d $META ]
-    then
-        cd $META; git checkout . ; git pull
-    else
+    if [ ! -d $META ]
         cd {{executable_directory()}}
         git clone https://github.com/chad-betamax/metatools.git 
     fi
@@ -84,6 +89,13 @@ dra-installs:
 
     # delta, syntax highlighting for git, diff and grep output 
     @just dra::install "dandavison/delta" 
+
+    # interact with Github with a cli 
+    @just dra::install "cli/cli"
+
+    # a cli snapshot manager
+    # @just dra::install "kimono-koans/httm"
+
 
 
 
