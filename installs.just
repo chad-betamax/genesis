@@ -16,7 +16,7 @@ apt-installs:
 
     @just apt::initialise
 
-    @just apt::get "signal-desktop"
+    #@just apt::get "signal-desktop"
     @just apt::get "git"
     @just apt::get "tmux"
     @just apt::get "traceroute"
