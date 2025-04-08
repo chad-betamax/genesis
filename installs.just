@@ -23,16 +23,16 @@ apt-installs:
     @just apt::get "nmap"
     @just apt::get "htop"
     @just apt::get "members"
-    @just apt::get "keychain"
     @just apt::get "jq"
     @just apt::get "direnv"
     @just apt::get "tree"
     @just apt::get "openssh-server"
-    @just apt::get "sshfs"
+
+    #@just apt::get "keychain"
 
 _dra := "https://raw.githubusercontent.com/devmatteini/dra/refs/heads/main/install.sh"
 _rust := "https://sh.rustup.rs"
-_aws := "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+#_aws := "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
 [group('install')]
 curl-installs:
     # Curl installs
@@ -41,15 +41,15 @@ curl-installs:
     # Install rust
     @curl --proto '=https' --tlsv1.2 {{ _rust }} --silent --show-error --fail|sh -s -- -y --no-modify-path
 
-    # Install AWS CLI
-    @curl --proto '=https' --tlsv1.2 --silent --show-error --fail {{ _aws }} -o "/tmp/awscliv2.zip"
-    @unzip -q /tmp/awscliv2.zip -d /tmp
-    @cd /tmp; sudo ./aws/install || cd /tmp; sudo ./aws/install --update
-    # cleanup
-    @rm /tmp/awscliv2.zip; rm -r /tmp/aws
-
     # Install dra (a Github downloader)
     @curl --proto '=https' --tlsv1.2 --silent --show-error --fail {{ _dra }} | sudo bash -s -- --to /usr/local/bin/
+
+    ## Install AWS CLI
+    #@curl --proto '=https' --tlsv1.2 --silent --show-error --fail {{ _aws }} -o "/tmp/awscliv2.zip"
+    #@unzip -q /tmp/awscliv2.zip -d /tmp
+    #@cd /tmp; sudo ./aws/install || cd /tmp; sudo ./aws/install --update
+    ## cleanup
+    #@rm /tmp/awscliv2.zip; rm -r /tmp/aws
 
 [group('install')]
 git-installs:
@@ -93,12 +93,12 @@ dra-installs:
     # interact with Github with a cli 
     @just dra::install "cli/cli"
 
-    # a to-do list 
-    @just dra::install Fanteria/todotxt-tui
-
     # a cli snapshot manager
-    # @just dra::install "kimono-koans/httm"
+    @just dra::install "kimono-koans/httm"
 
+
+    ## a to-do list 
+    #@just dra::install Fanteria/todotxt-tui
 
 
 
