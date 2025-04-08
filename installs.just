@@ -32,7 +32,7 @@ apt-installs:
 
 _dra := "https://raw.githubusercontent.com/devmatteini/dra/refs/heads/main/install.sh"
 _rust := "https://sh.rustup.rs"
-#_aws := "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+_aws := "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
 [group('install')]
 curl-installs:
     # Curl installs
@@ -44,12 +44,12 @@ curl-installs:
     # Install dra (a Github downloader)
     @curl --proto '=https' --tlsv1.2 --silent --show-error --fail {{ _dra }} | sudo bash -s -- --to /usr/local/bin/
 
-    ## Install AWS CLI
-    #@curl --proto '=https' --tlsv1.2 --silent --show-error --fail {{ _aws }} -o "/tmp/awscliv2.zip"
-    #@unzip -q /tmp/awscliv2.zip -d /tmp
-    #@cd /tmp; sudo ./aws/install || cd /tmp; sudo ./aws/install --update
-    ## cleanup
-    #@rm /tmp/awscliv2.zip; rm -r /tmp/aws
+    # Install AWS CLI
+    @curl --proto '=https' --tlsv1.2 --silent --show-error --fail {{ _aws }} -o "/tmp/awscliv2.zip"
+    @unzip -q /tmp/awscliv2.zip -d /tmp
+    @cd /tmp; sudo ./aws/install || cd /tmp; sudo ./aws/install --update
+    # cleanup
+    @rm /tmp/awscliv2.zip; rm -r /tmp/aws
 
 [group('install')]
 git-installs:
