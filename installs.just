@@ -94,8 +94,7 @@ dra-installs:
     @just dra::install "cli/cli"
 
     # a cli snapshot manager
-    @just dra::install "kimono-koans/httm"
-
+    #@just dra::install "kimono-koans/httm"
 
     ## a to-do list 
     #@just dra::install Fanteria/todotxt-tui
