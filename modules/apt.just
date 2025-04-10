@@ -9,3 +9,10 @@ get package:
     @sudo apt autoremove
     
 
+initialise:
+    # add repo for latest git
+    @sudo add-apt-repository --yes ppa:git-core/ppa
+    # and update cache
+    @sudo apt update
+    @sudo apt autoremove
+
