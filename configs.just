@@ -1,7 +1,7 @@
 [group('config')]
 _dotfiles:
     @printf 'backup saved to /tmp\ndeploying dotfiles...\n'
-    @chezmoi archive --output=/tmp/dotfiles_rescue.tar.gz
+    @chezmoi archive --output=/tmp/dotfiles_rescue.tar.gz ||true
     @chezmoi init --apply https://github.com/chad-betamax/dotfiles.git
     @printf 'dotfile config done\n\n'
 
