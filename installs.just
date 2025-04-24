@@ -27,6 +27,7 @@ apt-installs:
     @just apt::get "direnv"
     @just apt::get "tree"
     @just apt::get "openssh-server"
+    @just apt::get "pwgen"
 
     #@just apt::get "keychain"
 
