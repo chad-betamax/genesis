@@ -28,6 +28,7 @@ apt-installs:
     @just apt::get "tree"
     @just apt::get "openssh-server"
     @just apt::get "pwgen"
+    @just apt::get "build-essential"
 
     #@just apt::get "keychain"
 
