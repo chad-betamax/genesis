@@ -34,6 +34,9 @@ apt-installs:
 _dra := "https://raw.githubusercontent.com/devmatteini/dra/refs/heads/main/install.sh"
 _rust := "https://sh.rustup.rs"
 _aws := "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+_uv := "https://astral.sh/uv/install.sh"
+
+
 [group('install')]
 curl-installs:
     # Curl installs
@@ -51,6 +54,9 @@ curl-installs:
     @cd /tmp; sudo ./aws/install || cd /tmp; sudo ./aws/install --update
     # cleanup
     @rm /tmp/awscliv2.zip; rm -r /tmp/aws
+
+    # Install uv the python package manager
+    @curl --proto '=https' --tlsv1.2 --location --silent --show-error {{ _uv }} | sh
 
 [group('install')]
 git-installs:
