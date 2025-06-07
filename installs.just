@@ -101,6 +101,12 @@ dra-installs:
     # interact with Github with a cli 
     @just dra::install "cli/cli"
 
+    # minimap render used by neovim plugin
+    @just dra::install "wfxr/code-minimap"
+
+    # ruff, python linter/formatter
+    @just dra::install "astral-sh/ruff"
+
     # a cli snapshot manager
     #@just dra::install "kimono-koans/httm"
 
