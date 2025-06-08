@@ -16,7 +16,7 @@ _tidypath:
 
 # install all the things
 [group('install')]
-install: _tidypath apt-installs curl-installs dra-installs
+install: _tidypath apt-install curl-installs dra-installs
 
 
 # deploy dotfiles and plugins for all your programs
