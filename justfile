@@ -1,8 +1,18 @@
-import 'installs.just'
+import 'installs/apt.just'
+import 'installs/curl.just'
+import 'installs/dra.just'
+import 'installs/git.just'
 import 'configs.just'
 
 _default:
     @just --list
+
+[private]
+_paths := "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+_tidypath:
+    @echo 'tidying path'
+    @echo 'PATH="{{ _paths }}"' | sudo tee /etc/environment > /dev/null
 
 # install all the things
 [group('install')]
@@ -19,5 +29,7 @@ config: _dotfiles _bash_completions _plugins _misc
 #  neovim plugins
 #  config AWS ie certs logins etc
 #  source bashrc at very end (for the shell where the spawn is run)
+
+
 
 
